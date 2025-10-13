@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KBITube</title>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+<script>
+// kbi 콘솔에서 수행 후 결과값 복사
+let allPageList = [];
+let pageIndex = 0;
+let p_searchTranFldLv1 = "";
+let p_searchTranFldLv2 = "026005";
+let p_searchTranFldLv3 = "";
+for(let i=0; i<10; i++)
+{
+    pageIndex = i*10;
+
+    $.ajax({
+        type    : "POST",
+        url     : "https://im.kbitube.or.kr/platformTubeWeb/kbiTubeTrainingContent.do?cmd=selectTubeContentList",
+        data    : "p_searchTitleDesc=&p_searchTranFldLv1="+p_searchTranFldLv1+"&p_searchTranFldLv2="+p_searchTranFldLv2+"&p_searchTranFldLv3=&p_searchOrderBy=01&p_searchCtnt=contents&p_from="+pageIndex+"&p_size=10&p_depth=2&p_code="+p_searchTranFldLv2+"&p_menuDiv=1&p_searchCompleteYn=&p_searchChargeYn=&p_searchStartDt=&p_searchCatCode=&p_searchDuty=",
+        async   : false,
+        success : function(dat)
+        {
+            let list = JSON.parse(dat);
+
+            for(let idx=0; idx<list.length; idx++)
+            {
+                allPageList.push(list[idx]);
+            }
+        },
+        error : function (dat,aaa,ccc) {
+        }
+    });
+}
+
+let timeout = 0;
+for(let k=0; k<allPageList.length; k++)
+{
+    let title    = allPageList[k].N_TITLE;
+    let seq      = allPageList[k].O_CTNT_SEQ;
+    let playTime = allPageList[k].Q_TOTAL_PLAY_SNUM;
+
+    console.log("title    :: " + title);
+    console.log("일련번호   :: " + seq);
+    console.log("playTime :: " + playTime);
+    console.log("");
+
+    uf_play(title, seq, playTime, (timeout*1000));
+
+    timeout += (Number(allPageList[k].Q_TOTAL_PLAY_SNUM) + 5);
+}
+
+let interval = null;
+function uf_play(title, seq, playTime, timeout)
+{
+    setTimeout(function () {
+        console.error("title    :: " + title)
+        console.error("일련번호   :: " + seq)
+        console.error("playTime :: " + playTime)
+        console.error("timeout  :: " + (timeout/1000) + " 초")
+        console.error("");
+
+//        window.open("https://www.kbi.or.kr/platformWeb/kbiTubeContent.do?cmd=ctntDetail&pageName=kbiTubeCtntDetail&p_ctntSeq=" + seq, "viewer");
+        window.open("https://im.kbitube.or.kr/platformWeb/kbiTubeContent.do?cmd=ctntDetail&pageName=kbiTubeCtntDetail&p_ctntSeq="+seq, "viewer");
+
+        let timer = 0;
+        if( interval != null )
+        {
+            console.warn("clear interval :: " + timer + "/" + playTime);
+            clearInterval(interval);
+        }
+
+        interval = setInterval(function(){
+            console.warn(++timer + "/" + playTime);
+        }, 1000);
+    }, timeout);
+}
+</script>
+
+</body>
+</html>
