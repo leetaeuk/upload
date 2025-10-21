@@ -46,6 +46,15 @@ import (
  * 빌드방법(트레이로 들어감)
  * go build -ldflags="-H=windowsgui" -buildvcs=false -o offline_logi_flow_sim_tray.exe
  * offline_logi_flow_sim_test.exe --devices=1,2 --follow-kb-switch --tray --log-level=1
+ * devices=[첫번째디바이스, 두번째디바이스]
+ * follow-kb-switch=키보드 전환시 마우스 자동전환옵션
+ * tray=트레이아이콘활성화 옵션
+ * tray-only=오류가발생해도 트레이아이콘 활성화 옵션
+ * log=로그파일남길지 여부
+ * log-level=로그레벨
+ *===========================================================================================
+ * test=즉시스위칭처리 (트레이에서는 사용안함)
+ * right-channels=몇번째로 스위칭할건지 번호(0,1,2) (트레이에서는 사용안함)
  **/
 
 //
